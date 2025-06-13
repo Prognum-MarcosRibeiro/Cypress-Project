@@ -42,8 +42,9 @@ jobs:
           body: |
             Olá!
 
-            Segue em anexo o relatório dos testes Cypress executados.
+            Segue o relatório dos testes Cypress executados.
 
             Atenciosamente,
             GitHub Actions
-          attachments: report.zip
+          # attachments removido para evitar bloqueio
+          # attachments: report.zip
