@@ -36,15 +36,20 @@ jobs:
             echo "Relatório encontrado."
           fi
 
-      - name: Ler conteúdo do relatório HTML
-        id: ler_relatorio
+      - name: Instalar rclone
         run: |
-          CONTENT=$(cat cypress/reports/html/index.html)
-          echo "conteudo<<EOF" >> $GITHUB_OUTPUT
-          echo "$CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          curl https://rclone.org/install.sh | bash
 
-      - name: Enviar Relatório por E-mail (HTML no corpo)
+      - name: Configurar rclone
+        run: |
+          echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" > creds.json
+          rclone config create gdrive drive scope=drive file_creds=creds.json --non-interactive
+
+      - name: Fazer upload do relatório para o Google Drive
+        run: |
+          rclone copy cypress/reports/html/index.html gdrive:RelatoriosCypress
+
+      - name: Enviar e-mail com link do relatório
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -54,4 +59,13 @@ jobs:
           subject: "Resultado dos Testes Cypress"
           to: marcos.ribeiro@prognum.com.br
           from: ${{ secrets.EMAIL_USER }}
-          html_body: ${{ steps.ler_relatorio.outputs.conteudo }}
+          body: |
+            Olá!
+
+            Os testes Cypress foram executados com sucesso.
+
+            ✅ O relatório está disponível no link abaixo:
+            https://drive.google.com/drive/folders/<ID-DA-PASTA>
+
+            Atenciosamente,
+            GitHub Actions
