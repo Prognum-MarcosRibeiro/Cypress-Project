@@ -45,11 +45,13 @@ jobs:
           chmod +x /usr/bin/rclone
           rclone version
 
+      - name: Salvar credenciais da Service Account
+        run: echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" > creds.json
 
-      - name: Configurar rclone
+      - name: Configurar rclone (usando Service Account)
         run: |
-          echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" > creds.json
-          rclone config create gdrive drive scope=drive file_creds=creds.json --non-interactive
+          rclone config create gdrive drive scope=drive service_account_file=creds.json --non-interactive
+          rclone lsd gdrive: || true  # tenta listar o drive pra validar se conectou
 
       - name: Fazer upload do relatório para o Google Drive
         run: |
