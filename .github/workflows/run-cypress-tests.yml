@@ -22,8 +22,19 @@ jobs:
       - name: Executar testes Cypress
         run: cypress run
 
-      - name: Instalar zip no container
-        run: apt-get update && apt-get install -y zip
+      - name: Listar arquivos no diretório de relatórios
+        run: |
+          echo "Arquivos gerados em cypress/reports:"
+          find cypress/reports -type f
+
+      - name: Verificar se o relatório existe
+        run: |
+          if [ ! -f cypress/reports/html/index.html ]; then
+            echo "Relatório não encontrado!"
+            exit 1
+          else
+            echo "Relatório encontrado."
+          fi
 
       - name: Enviar Relatório por E-mail (HTML no corpo)
         uses: dawidd6/action-send-mail@v3
