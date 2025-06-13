@@ -1,9 +1,9 @@
 name: Executar Cypress Diariamente
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   cypress-run:
@@ -22,57 +22,16 @@ jobs:
       - name: Executar testes Cypress
         run: cypress run
 
-      - name: Listar arquivos no diretório de relatórios
+      - name: Verificar se o relatório foi gerado
         run: |
-          echo "Arquivos gerados em cypress/reports:"
-          find cypress/reports -type f
-
-      - name: Verificar se o relatório existe
-        run: |
-          if [ ! -f cypress/reports/html/index.html ]; then
+          if [ ! -f cypress/reports/html/mochawesome.html ]; then
             echo "Relatório não encontrado!"
             exit 1
           else
             echo "Relatório encontrado."
           fi
 
-      - name: Instalar unzip, curl, rclone e jq
-        run: |
-          apt-get update && apt-get install -y unzip curl jq
-          curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
-          unzip rclone-current-linux-amd64.zip
-          cp rclone-*-linux-amd64/rclone /usr/bin/rclone
-          chmod +x /usr/bin/rclone
-          rclone version
-
-
-      - name: Decodificar chave do service account para JSON
-        run: |
-          echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" | base64 -d > creds.json
-
-      - name: Exibir e-mail da service account (para debug)
-        run: |
-          echo "Service Account:"
-          jq .client_email creds.json
-
-      - name: Configurar rclone
-        run: |
-          rclone config create gdrive drive scope=drive service_account_file=creds.json --non-interactive
-
-      - name: Fazer upload do relatório para o Google Drive
-        run: |
-          rclone copy cypress/reports/html/index.html "gdrive:1IPOnI0kTX7up3nRq3f8XS4DkFJyxZJTE"
-          echo "Listando conteúdo da pasta no Google Drive:"
-          rclone lsf "gdrive:1IPOnI0kTX7up3nRq3f8XS4DkFJyxZJTE" --format "pTs"
-
-      - name: Gerar link público do relatório
-        id: gerar_link
-        run: |
-          LINK=$(rclone link "gdrive:1IPOnI0kTX7up3nRq3f8XS4DkFJyxZJTE/index.html")
-          echo "Link gerado: $LINK"
-          echo "link_relatorio=$LINK" >> $GITHUB_OUTPUT
-
-      - name: Enviar e-mail com link do relatório
+      - name: Enviar e-mail com relatório em anexo
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -87,11 +46,9 @@ jobs:
 
             Os testes Cypress foram executados com sucesso.
 
-            ✅ O relatório individual está disponível no link abaixo:
-            ${{ steps.gerar_link.outputs.link_relatorio }}
-
-            ✅ A pasta com todos os relatórios está aqui:
-            https://drive.google.com/drive/folders/1IPOnI0kTX7up3nRq3f8XS4DkFJyxZJTE
+            ✅ Em anexo, segue o relatório HTML dos testes realizados hoje.
 
             Atenciosamente,
             GitHub Actions
+          attachments: |
+            cypress/reports/html/mochawesome.html
