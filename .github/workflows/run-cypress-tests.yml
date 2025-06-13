@@ -48,7 +48,8 @@ jobs:
       - name: Configurar rclone
         run: |
           echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" > creds.json
-          rclone config create gdrive drive scope=drive file_creds=creds.json --non-interactive
+          rclone config create gdrive drive scope=drive service_account_file=creds.json --non-interactive
+
 
       - name: Fazer upload do relatório para o Google Drive
         run: |
