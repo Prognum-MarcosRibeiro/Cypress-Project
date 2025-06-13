@@ -25,12 +25,6 @@ jobs:
       - name: Instalar zip no container
         run: apt-get update && apt-get install -y zip
 
-      - name: Ler relatório HTML
-        id: get-report
-        run: |
-          REPORT_FILE=$(find cypress/reports -name "*.html" | head -n 1)
-          echo "report_path=$REPORT_FILE" >> $GITHUB_OUTPUT
-
       - name: Enviar Relatório por E-mail (HTML no corpo)
         uses: dawidd6/action-send-mail@v3
         with:
@@ -41,4 +35,4 @@ jobs:
           subject: "Resultado dos Testes Cypress"
           to: marcos.ribeiro@prognum.com.br
           from: ${{ secrets.EMAIL_USER }}
-          html_body: ${{ steps.get-report.outputs.report_path }}
+          html_body_file: cypress/reports/html/index.html
