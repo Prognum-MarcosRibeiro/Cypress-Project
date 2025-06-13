@@ -1,49 +1,11 @@
-name: Executar Cypress Diariamente
-
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 8 * * *'
-
-jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
-
-    container:
-      image: cypress/included:14.4.1
-
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Instalar dependências
-        run: npm install
-
-      - name: Executar testes Cypress
-        run: cypress run
-
-      - name: Listar arquivos no diretório de relatórios
-        run: |
-          echo "Arquivos gerados em cypress/reports:"
-          find cypress/reports -type f
-
-      - name: Verificar se o relatório existe
-        run: |
-          if [ ! -f cypress/reports/html/index.html ]; then
-            echo "Relatório não encontrado!"
-            exit 1
-          else
-            echo "Relatório encontrado."
-          fi
-
-      - name: Enviar Relatório por E-mail (HTML no corpo)
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USER }}
-          password: ${{ secrets.EMAIL_PASS }}
-          subject: "Resultado dos Testes Cypress"
-          to: marcos.ribeiro@prognum.com.br
-          from: ${{ secrets.EMAIL_USER }}
-          html_body_file: cypress/reports/html/index.html
+- name: Enviar Relatório por E-mail (HTML no corpo)
+  uses: dawidd6/action-send-mail@v3
+  with:
+    server_address: smtp.gmail.com
+    server_port: 587
+    username: ${{ secrets.EMAIL_USER }}
+    password: ${{ secrets.EMAIL_PASS }}
+    subject: "Resultado dos Testes Cypress"
+    to: marcos.ribeiro@prognum.com.br
+    from: ${{ secrets.EMAIL_USER }}
+    html_body: ${{ steps.ler_relatorio.outputs.conteudo }}
