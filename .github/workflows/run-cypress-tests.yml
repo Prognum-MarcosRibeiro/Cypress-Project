@@ -36,14 +36,15 @@ jobs:
             echo "Relatório encontrado."
           fi
 
-      - name: Instalar unzip, curl e rclone
+      - name: Instalar unzip, curl, rclone e jq
         run: |
-          apt-get update && apt-get install -y unzip curl
+          apt-get update && apt-get install -y unzip curl jq
           curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
           unzip rclone-current-linux-amd64.zip
           cp rclone-*-linux-amd64/rclone /usr/bin/rclone
           chmod +x /usr/bin/rclone
           rclone version
+
 
       - name: Decodificar chave do service account para JSON
         run: |
