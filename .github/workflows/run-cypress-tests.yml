@@ -45,11 +45,13 @@ jobs:
           chmod +x /usr/bin/rclone
           rclone version
 
+      - name: Decodificar chave do service account para JSON
+        run: |
+          echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" | base64 -d > creds.json
+
       - name: Configurar rclone
         run: |
-          echo "${{ secrets.GDRIVE_CREDENTIALS_JSON }}" > creds.json
           rclone config create gdrive drive scope=drive service_account_file=creds.json --non-interactive
-
 
       - name: Fazer upload do relatório para o Google Drive
         run: |
