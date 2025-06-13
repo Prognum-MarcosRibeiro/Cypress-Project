@@ -1,0 +1,38 @@
+name: Executar Cypress Diariamente
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar Dependências
+        run: npm install
+
+      - name: Executar Cypress
+        run: npx cypress run
+
+      - name: Enviar Relatório por E-mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "Relatório Cypress Diário"
+          to: seurecebedor@gmail.com
+          body: |
+            Olá, segue em anexo o relatório Cypress.
+          attachments: |
+            cypress/reports/html/mochawesome.html

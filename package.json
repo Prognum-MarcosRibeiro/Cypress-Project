@@ -1,0 +1,27 @@
+{
+  "name": "cypress-project",
+  "version": "1.0.0",
+  "description": "Este diretório será utilizado para armazenamento do projeto de testes [CashMe]",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prognum-MarcosRibeiro/Cypress-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Prognum-MarcosRibeiro/Cypress-Project/issues"
+  },
+  "homepage": "https://github.com/Prognum-MarcosRibeiro/Cypress-Project#readme",
+  "devDependencies": {
+    "cypress": "^14.4.1",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
+  }
+}
