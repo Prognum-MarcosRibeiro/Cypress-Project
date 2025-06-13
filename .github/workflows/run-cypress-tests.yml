@@ -1,26 +1,27 @@
 name: Executar Cypress Diariamente
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 8 * * *'
-  workflow_dispatch:
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Instalar Dependências
+      - name: Instalar dependências
         run: npm install
 
-      - name: Executar Cypress
+      - name: Executar testes Cypress
         run: npx cypress run
 
       - name: Enviar Relatório por E-mail
@@ -30,9 +31,7 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASS }}
-          subject: "Relatório Cypress Diário"
+          subject: "Resultado dos Testes Cypress"
           to: marcos.ribeiro@prognum.com.br
-          body: |
-            Olá, segue em anexo o relatório Cypress.
-          attachments: |
-            cypress/reports/html/index.html
+          from: ${{ secrets.EMAIL_USER }}
+          body: "Segue em anexo o relatório dos testes executados."
