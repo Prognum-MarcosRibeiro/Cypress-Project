@@ -31,8 +31,8 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASS }}
           subject: "Relatório Cypress Diário"
-          to: seurecebedor@gmail.com
+          to: marcos.ribeiro@prognum.com.br
           body: |
             Olá, segue em anexo o relatório Cypress.
           attachments: |
-            cypress/reports/html/mochawesome.html
+            cypress/reports/html/index.html
