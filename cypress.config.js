@@ -8,7 +8,7 @@ module.exports = defineConfig({
       overwrite: true,
       html: true,
       json: false,
-      inlineAssets: true,   // <- ESSA OPÇÃO GERA TUDO INLINE
+      inlineAssets: true,
       charts: true
     }
   }
