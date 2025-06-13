@@ -53,7 +53,7 @@ jobs:
 
       - name: Fazer upload do relatório para o Google Drive
         run: |
-          rclone copy cypress/reports/html/index.html gdrive:RelatoriosCypress
+          rclone copy cypress/reports/html/index.html gdrive:Testes-Cypress-Project
 
       - name: Enviar e-mail com link do relatório
         uses: dawidd6/action-send-mail@v3
