@@ -22,6 +22,9 @@ jobs:
       - name: Executar testes Cypress
         run: cypress run
 
+      - name: Instalar zip no container
+        run: apt-get update && apt-get install -y zip
+
       - name: Compactar relatório
         run: |
           zip -r report.zip cypress/reports
