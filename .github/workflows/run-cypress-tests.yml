@@ -24,6 +24,10 @@ jobs:
       - name: Executar testes Cypress
         run: npx cypress run
 
+      - name: Compactar relatório
+        run: |
+          zip -r report.zip cypress/reports
+
       - name: Enviar Relatório por E-mail
         uses: dawidd6/action-send-mail@v3
         with:
@@ -32,6 +36,13 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASS }}
           subject: "Resultado dos Testes Cypress"
-          to: marcos.ribeiro@prognum.com.br
+          to: seurecebedor@gmail.com
           from: ${{ secrets.EMAIL_USER }}
-          body: "Segue em anexo o relatório dos testes executados."
+          body: |
+            Olá!
+
+            Segue em anexo o relatório dos testes Cypress executados.
+
+            Atenciosamente,
+            GitHub Actions
+          attachments: report.zip
